@@ -20,10 +20,15 @@ docker compose exec -T app pytest -q
 - 5. 扣回核算：`/deductions`，`/api/deductions`。
 - 6. 进度对账：`/valuation`，`/api/valuation`。
 - 7. 签证归档：`/certificates`，`/api/certificates`。
+- 8. 价格调整：`/adjustments`，`/api/adjustments`。
 
 ## 核心规则
 
 累计申报必须减前期已审金额，变更按审批生效版本覆盖；负进度需关联冲回证据。
+
+## 价格调整
+
+合同调价批准后追溯已签工程量时，价差单独计价，不折成新增工程量，也不改写前期已签量与累计链。`/api/adjustments` 输出本期可签认结果：受影响已签量、应补/应扣明细、采信与排除的依据。未批准、未生效、已撤回、重复提交及互相冲突的依据一律隔离，不参与计价。`POST /api/runs/<id>/review` 签认后按结算键登记，同一依据重跑不重复计价；签认失败保留原批次版本与明细，可继续核对。`GET /api/adjustments/settlements` 查看已结清明细。
 
 ## 演示
 
